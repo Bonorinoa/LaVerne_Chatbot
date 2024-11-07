@@ -1,0 +1,12 @@
+langchain
+langchain_core
+langchain_community
+langchain_chroma
+langchain_groq
+langchain_unstructured
+langchain_huggingface
+sentence_transformers 
+langchain_text_splitters
+pypdf
+rank_bm25
+streamlit
