@@ -88,64 +88,63 @@ def get_chroma_settings():
 # Initialize RAG system
 def initialize_rag() -> RAG:
     """Initialize the RAG system with configuration and persistent storage"""
-    if "rag_system" not in st.session_state:
-        try:
-            # Configure the RAG system
-            config = RAGConfig(
-                chunk_size=1000,
-                chunk_overlap=200,
-                temperature=0.0,
-                max_tokens=350,
-                retrievers=[
-                    RetrieverConfig(
-                        retriever_type=RetrieverType.SIMILARITY,
-                        top_k=3,
-                        weight=0.6
-                    ),
-                    RetrieverConfig(
-                        retriever_type=RetrieverType.BM25,
-                        top_k=3,
-                        weight=0.4
-                    )
-                ]
-            )
-            
-            # Ensure persistence directory exists
-            Path(PERSIST_DIRECTORY).mkdir(parents=True, exist_ok=True)
-            
-            # Create RAG instance with persistence directory and collection name
-            rag = RAG(config, persist_directory=PERSIST_DIRECTORY, collection_name=COLLECTION_NAME)
-            
-            # Define the chat prompt template
-            prompt_template = PromptTemplate(
-                template="""Based on the following context from the University of La Verne Faculty Handbook, 
-                provide a helpful and natural response to the user's question. 
-                If the context doesn't contain relevant information, say so politely.
+    try:
+        # Configure the RAG system
+        config = RAGConfig(
+            chunk_size=1000,
+            chunk_overlap=200,
+            temperature=0.0,
+            max_tokens=350,
+            retrievers=[
+                RetrieverConfig(
+                    retriever_type=RetrieverType.SIMILARITY,
+                    top_k=3,
+                    weight=0.6
+                ),
+                RetrieverConfig(
+                    retriever_type=RetrieverType.BM25,
+                    top_k=3,
+                    weight=0.4
+                )
+            ]
+        )
+        
+        # Ensure persistence directory exists
+        Path(PERSIST_DIRECTORY).mkdir(parents=True, exist_ok=True)
+        
+        # Create RAG instance with persistence directory and collection name
+        rag = RAG(config, persist_directory=PERSIST_DIRECTORY, collection_name=COLLECTION_NAME)
+        
+        # Define the chat prompt template
+        prompt_template = PromptTemplate(
+            template="""Based on the following context from the University of La Verne Faculty Handbook, 
+            provide a helpful and natural response to the user's question. 
+            If the context doesn't contain relevant information, say so politely.
 
-                Context: {context}
+            Context: {context}
 
-                User Question: {user_query}
+            User Question: {user_query}
 
-                Response:""",
-                input_variables=["context", "user_query"]
-            )
-            
-            # Check if collection exists
-            if not check_vectorstore_exists(PERSIST_DIRECTORY, COLLECTION_NAME):
-                st.info("Initializing knowledge base for the first time. This may take a few minutes...")
-                rag.initialize_full_pipeline(KNOWLEDGE_BASE_PATH, prompt_template)
-            else:
-                st.info("Loading existing knowledge base...")
-                rag.load_existing_vectorstore(PERSIST_DIRECTORY, prompt_template)
-            
-            st.session_state.rag_system = rag
-            st.session_state.rag_initialized = True
-            
-        except Exception as e:
-            st.error(f"Failed to initialize RAG system: {str(e)}")
-            st.session_state.rag_initialized = False
-            raise
-            
+            Response:""",
+            input_variables=["context", "user_query"]
+        )
+        
+        # Check if collection exists
+        if not check_vectorstore_exists(PERSIST_DIRECTORY, COLLECTION_NAME):
+            st.info("Initializing knowledge base for the first time. This may take a few minutes...")
+            rag.initialize_full_pipeline(KNOWLEDGE_BASE_PATH, prompt_template)
+        else:
+            st.info("Loading existing knowledge base...")
+            rag.load_existing_vectorstore(PERSIST_DIRECTORY, prompt_template)
+        
+        st.session_state.rag_system = rag
+        st.session_state.rag_initialized = True
+        
+    except Exception as e:
+        st.error(f"Failed to initialize RAG system: {str(e)}")
+        st.session_state.rag_initialized = False
+        raise
+        
     return st.session_state.rag_system
 
 

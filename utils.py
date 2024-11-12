@@ -129,11 +129,12 @@ class RAG:
             
             # Initialize persistent Chroma client if persistence is enabled
             if persist_directory:
+                # Use in-memory storage to bypass SQLite version issue
                 self.chroma_client = chromadb.PersistentClient(
                     path=persist_directory,
                     settings=Settings(
                         anonymized_telemetry=False,
-                        is_persistent=True
+                        is_persistent=False  # Changed to False
                     )
                 )
             
