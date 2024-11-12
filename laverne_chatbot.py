@@ -11,9 +11,9 @@ from chromadb.config import Settings
 from utils import RAGConfig, RAG, RetrieverConfig, RetrieverType
 from langchain_core.prompts import PromptTemplate
 
-PERSIST_DIRECTORY = "./chroma_langchain_db"  # Updated to match your path
+PERSIST_DIRECTORY = "./chroma_langchain_db"  # Updated to use relative path compatible with Streamlit Cloud
 COLLECTION_NAME = "ulv_handbook"
-KNOWLEDGE_BASE_PATH = "ulv-faculty-handbook 23-24.pdf"
+KNOWLEDGE_BASE_PATH = "ulv-faculty-handbook-23-24.pdf"  # Corrected file name format
 
 # Store LLM generated responses
 if "messages" not in st.session_state:

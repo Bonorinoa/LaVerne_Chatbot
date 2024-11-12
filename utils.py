@@ -110,7 +110,7 @@ class RAG:
     """
     Modular implementation of Retrieval Augmented Generation with logging and error handling
     """
-    def __init__(self, config: Optional[RAGConfig] = None, persist_directory: Optional[str] = None, collection_name: str = "ulv_handbook"):
+    def __init__(self, config: Optional[RAGConfig] = None, persist_directory: Optional[str] = "./chroma_db", collection_name: str = "ulv_handbook"):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.info("Initializing RAG pipeline")
         
